@@ -1,0 +1,69 @@
+package components
+
+templ Mainform() {
+	<form class="flex flex-col gap-5" hx-post="/api/coffee" hx-swap="outerHTML" x-data="{ total:100 }">
+		// This is a form to buy me a coffee
+		<div class="flex justify-center  items-center text-gray-500 p-2 gap-5  bg-blue-100 border border-gray-300 shadow shadow-blue-100  rounded-2xl" x-data>
+			<div class="flex items-center gap-2">
+				<img src="/static/images/coffee.png" alt="coffee" class="h-16 w-16 rounded-full" title="Buy me a coffee to support my work worth 100 NRS"/> X
+			</div>
+			<div>
+				<input type="radio" value="1" name="amount" id="one" class="hidden peer" checked @change="$refs.custominput.value =0; total=100 "/>
+				<label for="one" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">1</label>
+			</div>
+			<div>
+				<input type="radio" value="2" name="amount" id="two" class="hidden peer" @change="$refs.custominput.value =0;total = 200 "/>
+				<label for="two" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">2</label>
+			</div>
+			<div>
+				<input type="radio" value="3" name="amount" id="three" class="hidden peer" @change="$refs.custominput.value =0;total = 300 "/>
+				<label for="three" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">3</label>
+			</div>
+			<div class="border border-blue-400 bg-blue-50 rounded-xl overflow-clip">
+				<input
+					type="text"
+					x-ref="custominput"
+					name="custom"
+					id="custom-amount"
+					class="peer-checked:bg-blue-500 peer-checked:text-white
+								 h-10 w-10 text-center"
+					x-mask="9999"
+					placeholder="10"
+					@input="$refs.custom.checked = true; total = $event.target.value*100"
+					value="0"
+				/>
+				<input type="radio" x-ref="custom" value="custom" name="amount" id="custom" class="hidden peer"/>
+			</div>
+		</div>
+		<input
+			type="text"
+			name="name"
+			id="name"
+			placeholder="Your name"
+			class="p-2 border border-gray-300 rounded-xl"
+			required
+			max="100"
+		/>
+		<input
+			type="email"
+			name="email"
+			id="email"
+			placeholder="Your email"
+			class="p-2 border border-gray-300 rounded-xl"
+			required
+			max="100"
+		/>
+		<textarea
+			name="message"
+			id="message"
+			rows="3"
+			class="p-2 border border-gray-300 rounded-xl"
+			placeholder="A very nice message for me"
+			required
+			maxlength="500"
+		></textarea>
+		<button type="submit" class="bg-blue-500 text-white p-2 rounded-xl">
+			NRS <span x-text="total"></span>
+		</button>
+	</form>
+}

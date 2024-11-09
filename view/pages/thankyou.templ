@@ -1,0 +1,16 @@
+package pages
+
+import "github.com/satishcg12/dotnet-me/view/layouts"
+
+templ ThankYou() {
+	@layouts.DefaultTemplate("Thank You", "Thank you for your payment.") {
+		<section>
+			<h3 class="text-xl font-semibold">
+				Thank You
+			</h3>
+			<p class="text-lg text-gray-500">
+				Thank you for your payment. Your payment has been successfully processed. You will receive an email shortly with the details of your payment.
+			</p>
+		</section>
+	}
+}

@@ -1,0 +1,19 @@
+version: "3"
+
+tasks:
+    dev:
+        desc: run both air:run and tailwind:watch
+        cmds:
+        - task air:run && task tailwind:watch
+    air:run:
+        desc: Run the container image
+        cmds:
+        - air -c .air.toml
+    tailwind:watch:
+        desc: Run the container image
+        cmds:
+        - tailwindcss -i static/css/style.css build -o static/css/tailwind.css --watch
+    build:
+        desc: Build the container image
+        cmds:
+        - docker build -t mycontainerimage -f Dockerfile .

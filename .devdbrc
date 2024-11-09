@@ -1,0 +1,6 @@
+[
+  {
+    "type": "sqlite",
+    "path": "/home/mine/Projects/go/donate-me/donation.db"
+  }
+]

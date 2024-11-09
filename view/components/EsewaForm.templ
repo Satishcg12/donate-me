@@ -1,0 +1,64 @@
+package components
+
+import (
+	"fmt"
+	"github.com/satishcg12/dotnet-me/utils"
+	"strconv"
+	"time"
+)
+
+templ EsewaForm(name string, email string, message string, amount uint32) {
+	{{ unique_id := strconv.Itoa(int(time.Now().Unix())) }}
+	{{ signature := utils.EncodeBase64("8gBm/:&EnhH.1/q", fmt.Sprintf("total_amount=%d,transaction_uuid=%s,product_code=EPAYTEST", amount+0, unique_id)) }}
+	// details 
+	<section>
+		<h3 class="text-xl font-semibold">
+			Esewa Payment
+		</h3>
+		<p class="text-lg text-gray-500">
+			You can pay me through Esewa. Just click the submit button below and you will be redirected to the Esewa payment page.
+		</p>
+		<div class="text-xl font-semibold">
+			Name:
+			<span class="text-lg font-normal">
+				{ name }
+			</span>
+		</div>
+		<div class="text-xl font-semibold">
+			Email:
+			<span class="text-lg font-normal">
+				{ email }
+			</span>
+		</div>
+		<div class="text-xl font-semibold">
+			Message:
+			<span class="text-lg font-normal">
+				{ message }
+			</span>
+		</div>
+		<div class="text-xl font-semibold">
+			Amount:
+			<span class="text-lg font-normal">
+				NPR { strconv.Itoa(int(amount)) }
+			</span>
+		</div>
+		<hr/>
+		<h3 class="text-xl font-semibold">
+			Total Amount: NPR { strconv.Itoa(int(amount) + 0) }
+		</h3>
+	</section>
+	<form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+		<input type="text" id="amount" name="amount" value={ strconv.Itoa(int(amount)) } required hidden/>
+		<input type="text" id="tax_amount" name="tax_amount" value="0" required hidden/>
+		<input type="text" id="total_amount" name="total_amount" value={ strconv.Itoa(int(amount) + 0) } required hidden/>
+		<input type="text" id="transaction_uuid" name="transaction_uuid" value={ unique_id } required hidden/>
+		<input type="text" id="product_code" name="product_code" value="EPAYTEST" required hidden/>
+		<input type="text" id="product_service_charge" name="product_service_charge" value="0" required hidden/>
+		<input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required hidden/>
+		<input type="text" id="success_url" name="success_url" value="http://localhost:3000/api/v1/payment/success?id=1234" required hidden/>
+		<input type="text" id="failure_url" name="failure_url" value="http://localhost:3000/api/v1/payment/failure" required hidden/>
+		<input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required hidden/>
+		<input type="text" id="signature" name="signature" value={ signature } required hidden/>
+		<input value="Submit" type="submit" class="bg-blue-500 text-white p-2 rounded-xl w-full"/>
+	</form>
+}
