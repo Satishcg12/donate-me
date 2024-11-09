@@ -4,10 +4,26 @@
 
 package repository
 
+import (
+	"database/sql"
+)
+
+type Donation struct {
+	ID        int64          `json:"id"`
+	FullName  string         `json:"full_name"`
+	Email     string         `json:"email"`
+	Message   sql.NullString `json:"message"`
+	Status    string         `json:"status"`
+	Amount    int64          `json:"amount"`
+	CreatedAt sql.NullTime   `json:"created_at"`
+	UpdatedAt sql.NullTime   `json:"updated_at"`
+}
+
 type User struct {
-	ID        interface{}
-	FullName  string
-	Email     string
-	Password  string
-	CreatedAt interface{}
+	ID        interface{}  `json:"id"`
+	FullName  string       `json:"full_name"`
+	Email     string       `json:"email"`
+	Password  string       `json:"password"`
+	CreatedAt sql.NullTime `json:"created_at"`
+	UpdatedAt sql.NullTime `json:"updated_at"`
 }

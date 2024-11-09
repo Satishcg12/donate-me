@@ -6,15 +6,16 @@ templ DefaultTemplate(title string, description string) {
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			
+			// <link rel="preconnect" href="https://fonts.googleapis.com"/>
+			// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			// <link href="https://fonts.googleapis.com/css2?family=Short+Stack&display=swap" rel="stylesheet"/>
 			<link rel="stylesheet" href="/static/css/tailwind.css"/>
 			<link rel="stylesheet" href="/static/css/style.css"/>
-			<title>{title}</title>
-			<meta name="description" content="{description}">
+			<title>{ title }</title>
+			<meta name="description" content="{description}"/>
 		</head>
 		<body class="min-h-screen bg-blue-50 ">
-		
-			{children...}
+			{ children... }
 		</body>
 		<script defer src="/static/js/htmx.min.js"></script>
 		// <script defer src="/static/js/alpine.min.js"></script>

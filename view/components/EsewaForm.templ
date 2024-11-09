@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-templ EsewaForm(name string, email string, message string, amount uint32) {
+templ EsewaForm(donationid string, name string, email string, message string, amount uint32) {
 	{{ unique_id := strconv.Itoa(int(time.Now().Unix())) }}
 	{{ signature := utils.EncodeBase64("8gBm/:&EnhH.1/q", fmt.Sprintf("total_amount=%d,transaction_uuid=%s,product_code=EPAYTEST", amount+0, unique_id)) }}
 	// details 
@@ -55,10 +55,10 @@ templ EsewaForm(name string, email string, message string, amount uint32) {
 		<input type="text" id="product_code" name="product_code" value="EPAYTEST" required hidden/>
 		<input type="text" id="product_service_charge" name="product_service_charge" value="0" required hidden/>
 		<input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required hidden/>
-		<input type="text" id="success_url" name="success_url" value="http://localhost:3000/api/v1/payment/success?id=1234" required hidden/>
-		<input type="text" id="failure_url" name="failure_url" value="http://localhost:3000/api/v1/payment/failure" required hidden/>
+		<input type="text" id="success_url" name="success_url" value={"http://localhost:3000/api/v1/donation/success/" + donationid} required hidden/>
+		<input type="text" id="failure_url" name="failure_url" value={"http://localhost:3000/api/v1/donation/failure/" + donationid} required hidden/>
 		<input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required hidden/>
 		<input type="text" id="signature" name="signature" value={ signature } required hidden/>
-		<input value="Submit" type="submit" class="bg-blue-500 text-white p-2 rounded-xl w-full"/>
+		<input value="Continue with Esewa" type="submit" class="bg-green-500 text-white p-2 rounded-xl w-full"/>
 	</form>
 }

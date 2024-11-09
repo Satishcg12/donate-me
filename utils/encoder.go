@@ -28,14 +28,7 @@ func DecodeBase64(encodedString string) string {
 
 func VerifySignature(secretKey string, signedFieldNames string, signature string) bool {
 	// Create a new HMAC by defining the hash type and the key (as byte array)
-	key := []byte(secretKey)
-	h := hmac.New(sha256.New, key)
-	h.Write([]byte(signedFieldNames))
-
-	hmacHash := h.Sum(nil)
-
-	// Encode the resulting hash to base64
-	encodedHash := base64.StdEncoding.EncodeToString(hmacHash)
+	encodedHash := EncodeBase64(secretKey, signedFieldNames)
 
 	// Compare the generated hash with the signature
 	return encodedHash == signature

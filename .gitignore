@@ -4,3 +4,5 @@ tmp/
 
 view/**/*_templ.go
 view/pages/*_templ.go
+
+.env

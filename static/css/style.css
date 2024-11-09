@@ -1,13 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Short+Stack&display=swap");
+
+/* @import url('https://fonts.cdnfonts.com/css/choco-cooky'); */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.example {
-  @apply bg-blue-500 text-white;
+// set the font family
+@font-face {
+  font-family: "Choco Cooky";
+  src: url("../fonts/Choco_Cooky.ttf");
 }
 
-.remove-arrow::-webkit-inner-spin-button,
-.remove-arrow::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+* {
+  font-family: "Short Stack", cursive;
 }

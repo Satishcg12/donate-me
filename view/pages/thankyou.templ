@@ -1,16 +1,26 @@
 package pages
 
-import "github.com/satishcg12/dotnet-me/view/layouts"
+import (
+	"github.com/satishcg12/dotnet-me/view/layouts"
+	"strconv"
+)
 
-templ ThankYou() {
+type ThankYouStruct struct {
+	Name    string
+	Email   string
+	Message string
+	Amount  int64
+}
+
+templ ThankYou(data ThankYouStruct) {
 	@layouts.DefaultTemplate("Thank You", "Thank you for your payment.") {
-		<section>
-			<h3 class="text-xl font-semibold">
-				Thank You
-			</h3>
+		<section class="flex flex-col items-center justify-center h-screen">
+			<h1 class="text-3xl font-semibold text-center">
+				Thank you { data.Name } for your payment of NPR { strconv.Itoa(int(data.Amount)) }
+			</h1>
 			<p class="text-lg text-gray-500">
-				Thank you for your payment. Your payment has been successfully processed. You will receive an email shortly with the details of your payment.
+				We have received your payment. Your support means a lot to us. We will contact you soon.
 			</p>
-		</section> 
+		</section>
 	}
 }

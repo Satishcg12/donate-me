@@ -1,0 +1,34 @@
+package pages
+
+templ RedirectPage(url string, message string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Redirecting...</title>
+		</head>
+		<body>
+			<section class="flex flex-col items-center justify-center h-screen" id="redirect" data-url={ string(templ.SafeURL(url)) }>
+				<h1 class="text-3xl font-semibold text-center">
+					{ message }
+				</h1>
+				<p class="text-lg text-gray-500">
+					You will be redirected to the payment page in a few seconds. If you are not redirected, click the button below.
+				</p>
+				<a href={ templ.SafeURL(url) } class="bg-blue-500 text-white px-5 py-2 rounded-lg mt-5">
+					Click here to go to the payment page
+				</a>
+			</section>
+		</body>
+		<script>
+        redirect = document.getElementById('redirect')
+        url = redirect.getAttribute('data-url')
+        
+        setTimeout(() => {
+            window.location.href = url
+        }, 3000)
+
+    </script>
+	</html>
+}

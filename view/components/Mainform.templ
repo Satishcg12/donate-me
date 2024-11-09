@@ -1,22 +1,61 @@
 package components
 
-templ Mainform() {
-	<form class="flex flex-col gap-5" hx-post="/api/coffee" hx-swap="outerHTML" x-data="{ total:100 }">
+import (
+	"fmt"
+	"strconv"
+)
+
+templ Mainform(name string, email string, message string, amount uint32, err string) {
+	{{if err == "" {
+	err = "{name: '', email: '', message: '', amount: 0}"
+}
+	}}
+	{{ data := fmt.Sprintf(`{name: "%s", email: "%s", message: "%s", amount: %d, error: %s, total: %d}`, name, email, message, amount, err, amount*100) }}
+	<form
+		class="flex flex-col gap-5"
+		hx-post="/api/v1/donation/esewaform"
+		hx-swap="outerHTML"
+		x-data={ data }
+	>
 		// This is a form to buy me a coffee
 		<div class="flex justify-center  items-center text-gray-500 p-2 gap-5  bg-blue-100 border border-gray-300 shadow shadow-blue-100  rounded-2xl" x-data>
 			<div class="flex items-center gap-2">
 				<img src="/static/images/coffee.png" alt="coffee" class="h-16 w-16 rounded-full" title="Buy me a coffee to support my work worth 100 NRS"/> X
 			</div>
 			<div>
-				<input type="radio" value="1" name="amount" id="one" class="hidden peer" checked @change="$refs.custominput.value =0; total=100 "/>
+				<input
+					type="radio"
+					value="1"
+					name="amount"
+					id="one"
+					class="hidden peer"
+					:checked="amount == 1"
+					@change="$refs.custominput.value =0; total=100 "
+				/>
 				<label for="one" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">1</label>
 			</div>
 			<div>
-				<input type="radio" value="2" name="amount" id="two" class="hidden peer" @change="$refs.custominput.value =0;total = 200 "/>
+				<input
+					type="radio"
+					value="2"
+					name="amount"
+					id="two"
+					class="hidden peer"
+					:checked="amount == 2"
+					@change="$refs.custominput.value =0;total = 200 "
+				/>
 				<label for="two" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">2</label>
 			</div>
 			<div>
-				<input type="radio" value="3" name="amount" id="three" class="hidden peer" @change="$refs.custominput.value =0;total = 300 "/>
+				<input
+					type="radio"
+					value="3"
+					name="amount"
+					id="three"
+					class="hidden peer"
+					@change="$refs.custominput.value =0;total = 300 "
+					:checked="amount == 3"
+				/>
 				<label for="three" class="grid place-content-center rounded-full border border-blue-400 bg-blue-50 peer-checked:bg-blue-500 peer-checked:text-white h-10 w-10">3</label>
 			</div>
 			<div class="border border-blue-400 bg-blue-50 rounded-xl overflow-clip">
@@ -29,41 +68,83 @@ templ Mainform() {
 								 h-10 w-10 text-center"
 					x-mask="9999"
 					placeholder="10"
+					if amount != 1 && amount != 2 && amount != 3 {
+						value={ strconv.Itoa(int(amount)) }
+					} else {
+						value="0"
+					}
 					@input="$refs.custom.checked = true; total = $event.target.value*100"
-					value="0"
 				/>
-				<input type="radio" x-ref="custom" value="custom" name="amount" id="custom" class="hidden peer"/>
+				<input
+					type="radio"
+					x-ref="custom"
+					value="custom"
+					name="amount"
+					id="custom"
+					class="hidden peer"
+					:checked="amount != 1 && amount != 2 && amount != 3"
+				/>
 			</div>
 		</div>
-		<input
-			type="text"
-			name="name"
-			id="name"
-			placeholder="Your name"
-			class="p-2 border border-gray-300 rounded-xl"
-			required
-			max="100"
-		/>
-		<input
-			type="email"
-			name="email"
-			id="email"
-			placeholder="Your email"
-			class="p-2 border border-gray-300 rounded-xl"
-			required
-			max="100"
-		/>
-		<textarea
-			name="message"
-			id="message"
-			rows="3"
-			class="p-2 border border-gray-300 rounded-xl"
-			placeholder="A very nice message for me"
-			required
-			maxlength="500"
-		></textarea>
+		<div>
+			<input
+				type="text"
+				:value="name"
+				name="name"
+				id="name"
+				placeholder="Your full name"
+				class="p-2 w-full bg-blue-50 border border-gray-300 rounded-xl"
+				required
+				maxlength="100"
+				minlength="3"
+				@input="
+				name = $event.target.value; 
+				error.name = name.length < 3 ? 'Name must be at least 3 characters' :
+				name.length > 100 ? 'Name must be at most 100 characters' :  
+				!name.match(/^[a-zA-Z ]+$/) ? 'Name must contain only alphabets' : 
+				!name.includes(' ') ? 'Name must contain at least one space' : ''
+
+				"
+			/>
+			<span x-text="error.name" class="text-red-500 text-sm"></span>
+		</div>
+		<div>
+			<input
+				type="email"
+				:value="email"
+				name="email"
+				id="email"
+				placeholder="Your email"
+				class="p-2 border border-gray-300 rounded-xl w-full bg-blue-50"
+				required
+				@input="email = $event.target.value; 
+				error.email = !email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/) ? 'Invalid email' :
+				email.length < 5 ? 'Email must be at least 5 characters' : 
+				email.length > 100 ? 'Email must be at most 100 characters' : '';
+				"
+				minlength="5"
+				maxlength="100"
+				autocomplete="email"
+			/>
+			<span x-text="error.email" class="text-red-500 text-sm"></span>
+		</div>
+		<div>
+			<textarea
+				name="message"
+				:value="message"
+				id="message"
+				rows="3"
+				class="p-2 border border-gray-300 rounded-xl w-full bg-blue-50"
+				placeholder="A very nice message for me"
+				required
+				@input="message = $event.target.value; error.message = message.length < 10 ? 'Message must be at least 10 characters' : ''"
+				minlength="10"
+				maxlength="500"
+			></textarea>
+			<span x-text="error.message" class="text-red-500 text-sm"></span>
+		</div>
 		<button type="submit" class="bg-blue-500 text-white p-2 rounded-xl">
-			NRS <span x-text="total"></span>
+			Support With NRS <span x-text="total"></span>
 		</button>
 	</form>
 }

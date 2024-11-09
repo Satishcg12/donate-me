@@ -25,13 +25,13 @@ INSERT INTO users
 (full_name, email, password)
 VALUES
 (?, ?, ?)
-RETURNING id, full_name, email, password, created_at
+RETURNING id, full_name, email, password, created_at, updated_at
 `
 
 type CreateUserParams struct {
-	FullName string
-	Email    string
-	Password string
+	FullName string `json:"full_name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -43,6 +43,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -57,7 +58,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id interface{}) error {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, full_name, email, password, created_at FROM users WHERE email = ?
+SELECT id, full_name, email, password, created_at, updated_at FROM users WHERE email = ?
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -69,12 +70,13 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, full_name, email, password, created_at FROM users WHERE id = ?
+SELECT id, full_name, email, password, created_at, updated_at FROM users WHERE id = ?
 `
 
 func (q *Queries) GetUserByID(ctx context.Context, id interface{}) (User, error) {
@@ -86,17 +88,18 @@ func (q *Queries) GetUserByID(ctx context.Context, id interface{}) (User, error)
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, full_name, email, password, created_at FROM users ORDER BY id ASC LIMIT ? OFFSET ?
+SELECT id, full_name, email, password, created_at, updated_at FROM users ORDER BY id ASC LIMIT ? OFFSET ?
 `
 
 type ListUsersParams struct {
-	Limit  int64
-	Offset int64
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
 }
 
 func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error) {
@@ -114,6 +117,7 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.Email,
 			&i.Password,
 			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -132,14 +136,14 @@ const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET full_name = ?, email = ?, password = ?
 WHERE id = ?
-RETURNING id, full_name, email, password, created_at
+RETURNING id, full_name, email, password, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	FullName string
-	Email    string
-	Password string
-	ID       interface{}
+	FullName string      `json:"full_name"`
+	Email    string      `json:"email"`
+	Password string      `json:"password"`
+	ID       interface{} `json:"id"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -156,6 +160,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }

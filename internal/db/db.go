@@ -7,7 +7,7 @@ import (
 )
 
 func ConnectDatabase() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "short_url.db")
+	db, err := sql.Open("sqlite3", "donation.db")
 	if err != nil {
 		return nil, err
 	}
