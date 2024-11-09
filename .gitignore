@@ -2,4 +2,5 @@ tmp/
 
 .devdbrc
 
-**/*_templ.go
+view/**/*_templ.go
+view/pages/*_templ.go

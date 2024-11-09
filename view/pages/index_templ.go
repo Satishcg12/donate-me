@@ -54,7 +54,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></section><div class=\"md:w-1/2 border\"><section>about section</section><section>recent support section</section></div></section>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("hello </div></section><div class=\"md:w-1/2 border\"><section>about section</section><section>recent support section</section></div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
