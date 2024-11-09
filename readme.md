@@ -4,10 +4,10 @@
 
 - [x] Create a index page
 - [x] Create a thank you page
-- [x] Create a error page
-- [] Create about section
-- [] Create recent donation section
-- [] Create donation bar(with sse)
+- [ ] Create a error page
+- [ ] Create about section
+- [ ] Create recent donation section
+- [ ] Create donation bar(with sse)
 
 ## Description
 
