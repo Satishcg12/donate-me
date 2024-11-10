@@ -48,6 +48,13 @@ func (a *App) LoadRoutes() {
 			return
 		}
 
+		if res.Status != "COMPLETE" {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("Donation not found"))
+
+			return
+		}
+
 		pages.ThankYou(pages.ThankYouStruct{
 			Amount:  res.Amount,
 			Name:    res.FullName,

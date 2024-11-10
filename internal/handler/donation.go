@@ -162,8 +162,11 @@ func (d *DonationHandler) DonationSuccess(w http.ResponseWriter, r *http.Request
 
 	log.Println(signature)
 	log.Println(signedFieldNames)
+
 	log.Println(utils.VerifySignature(secretKey, signedFieldNames, signature))
-	if !utils.VerifySignature(secretKey, signedFieldNames, signature) {
+	hash := utils.EncodeBase64(secretKey, signedFieldNames)
+	log.Println(hash)
+	if hash != signature {
 		http.Error(w, "Invalid signature", http.StatusBadRequest)
 		return
 	}

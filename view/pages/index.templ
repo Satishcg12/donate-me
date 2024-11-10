@@ -11,20 +11,16 @@ templ Index() {
 			<img src="/static/images/thumbnail.jpg" alt="thumbnail" class="h-full w-full object-cover object-center brightness-90"/>
 		</section>
 		<section class="-translate-y-20 max-w-5xl mx-auto flex flex-col sm:flex-row-reverse items-center  sm:items-start justify-evenly sm:justify-normal gap-5 px-5">
-			<section class="md:w-1/2 text-lg ">
-				<div class=" px-10 py-7 from-blue-50 to-white bg-gradient-to-b rounded-2xl flex flex-col gap-4 shadow">
-					<h2 class="text-2xl font-semibold">
-						Buy me a coffee
-					</h2>
-					@components.Mainform("", "", "", 1, "")
-				</div>
-			</section>
-			<div class="md:w-1/2 border">
-				<section>
-					about section
-				</section>
-				<section>recent support section</section>
-			</div>
+			@components.Section("Buy me a coffee", "If you like my work, consider buying me a coffee") {
+				@components.Mainform("","","",1,"")
+			}
+			
+				@components.Section("About me", "I am a software developer who loves to build things") {
+					@components.AboutSectoin()
+					<hr>
+					@components.RecentSupports()
+				}
+			
 		</section>
 	}
 }
