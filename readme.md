@@ -4,10 +4,10 @@
 
 - [x] Create a index page
 - [x] Create a thank you page
-- [ ] Create a error page
-- [ ] Create about section
-- [ ] Create recent donation section
-- [ ] Create donation bar(with sse)
+- [x] Create a error page
+- [x] Create about section
+- [x] Create recent donation section
+<!-- - [ ] Create donation bar(with sse) -->
 
 ## Description
 
@@ -59,6 +59,3 @@ sqlc generate
 ```
 
 
-
-
-http://localhost:3000/api/v1/donation/success/3?data=eyJ0cmFuc2FjdGlvbl9jb2RlIjoiMDAwOTBBMCIsInN0YXR1cyI6IkNPTVBMRVRFIiwidG90YWxfYW1vdW50IjoiMzAwLjAiLCJ0cmFuc2FjdGlvbl91dWlkIjoiMTczMTE2NzkwNSIsInByb2R1Y3RfY29kZSI6IkVQQVlURVNUIiwic2lnbmVkX2ZpZWxkX25hbWVzIjoidHJhbnNhY3Rpb25fY29kZSxzdGF0dXMsdG90YWxfYW1vdW50LHRyYW5zYWN0aW9uX3V1aWQscHJvZHVjdF9jb2RlLHNpZ25lZF9maWVsZF9uYW1lcyIsInNpZ25hdHVyZSI6ImxmUnlsVE5jUGZPZGtJdkpLMnkxRXY1MHNGZU5ZNFllZjU3L1N5azJKbmM9In0=
