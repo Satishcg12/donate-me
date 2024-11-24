@@ -234,7 +234,7 @@ func (d *DonationHandler) DonationFail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pages.RedirectPage("http://localhost:3000/fail/"+donationId, "Donation Failed").Render(r.Context(), w)
+	pages.RedirectPage("http://localhost:3000/", "Donation Failed").Render(r.Context(), w)
 
 }
 
