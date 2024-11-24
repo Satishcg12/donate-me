@@ -8,12 +8,13 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/satishcg12/dotnet-me/internal/repository"
-	"github.com/satishcg12/dotnet-me/utils"
-	"github.com/satishcg12/dotnet-me/view/components"
-	"github.com/satishcg12/dotnet-me/view/pages"
+	"github.com/satishcg12/donate-me/internal/repository"
+	"github.com/satishcg12/donate-me/utils"
+	"github.com/satishcg12/donate-me/view/components"
+	"github.com/satishcg12/donate-me/view/pages"
 )
 
 type DonationHandler struct {
@@ -25,6 +26,8 @@ type DonationHanderInterface interface {
 	EsewaForm(w http.ResponseWriter, r *http.Request)
 	DonationSuccess(w http.ResponseWriter, r *http.Request)
 	DonationFail(w http.ResponseWriter, r *http.Request)
+
+	ListDonations(w http.ResponseWriter, r *http.Request)
 }
 type FormError struct {
 	Amount  string `json:"amount"`
@@ -114,7 +117,14 @@ func (d *DonationHandler) EsewaForm(w http.ResponseWriter, r *http.Request) {
 		//convert to string
 		strRes := string(res)
 		log.Println(strRes)
-		components.Mainform(name, email, message, uint32(amountUint), strRes).Render(r.Context(), w)
+		data := components.MainformData{
+			Name:    name,
+			Email:   email,
+			Message: message,
+			Amount:  uint32(amountUint),
+			Error:   strRes,
+		}
+		components.Mainform(data).Render(r.Context(), w)
 		return
 	}
 
@@ -154,11 +164,14 @@ func (d *DonationHandler) DonationSuccess(w http.ResponseWriter, r *http.Request
 		http.Error(w, "Invalid data", http.StatusBadRequest)
 		return
 	}
+	// fmt.Println(dataStruct)
 	// VERIFY SIGNATURE
 	secretKey := "8gBm/:&EnhH.1/q"
 	signature := dataStruct.Signature
+	TotalAmount := strings.Replace(dataStruct.TotalAmount, ",", "", -1)
+
 	// transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names
-	signedFieldNames := fmt.Sprintf("transaction_code=%s,status=%s,total_amount=%s,transaction_uuid=%s,product_code=%s,signed_field_names=%s", dataStruct.TransactionCode, dataStruct.Status, dataStruct.TotalAmount, dataStruct.TransactionUUID, dataStruct.ProductCode, dataStruct.SignedFieldNames)
+	signedFieldNames := fmt.Sprintf("transaction_code=%s,status=%s,total_amount=%s,transaction_uuid=%s,product_code=%s,signed_field_names=%s", dataStruct.TransactionCode, dataStruct.Status, TotalAmount, dataStruct.TransactionUUID, dataStruct.ProductCode, dataStruct.SignedFieldNames)
 
 	log.Println(signature)
 	log.Println(signedFieldNames)
@@ -200,5 +213,82 @@ func (d *DonationHandler) DonationSuccess(w http.ResponseWriter, r *http.Request
 }
 
 func (d *DonationHandler) DonationFail(w http.ResponseWriter, r *http.Request) {
+
+	donationId := chi.URLParam(r, "donation_id")
+	if donationId == "" {
+		http.Error(w, "Invalid donation id", http.StatusBadRequest)
+		return
+	}
+	donationIdInt, err := strconv.Atoi(donationId)
+	if err != nil {
+		http.Error(w, "Invalid donation id", http.StatusBadRequest)
+		return
+	}
+
+	_, err = d.repo.UpdateStatus(r.Context(), repository.UpdateStatusParams{
+		ID:     int64(donationIdInt),
+		Status: "FAILED",
+	})
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	pages.RedirectPage("http://localhost:3000/fail/"+donationId, "Donation Failed").Render(r.Context(), w)
+
+}
+
+func (d *DonationHandler) ListDonations(w http.ResponseWriter, r *http.Request) {
+	// get param n , p
+	n := r.URL.Query().Get("n")
+	p := r.URL.Query().Get("p")
+	if n == "" {
+		n = "5"
+	}
+	if p == "" {
+		p = "1"
+	}
+	nInt, err := strconv.Atoi(n)
+	if err != nil {
+		http.Error(w, "Invalid n", http.StatusBadRequest)
+		return
+	}
+	pInt, err := strconv.Atoi(p)
+	if err != nil {
+		http.Error(w, "Invalid p", http.StatusBadRequest)
+		return
+	}
+
+	res, err := d.repo.ListDonations(r.Context(), repository.ListDonationsParams{Limit: int64(nInt), Offset: int64((pInt - 1) * nInt)})
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		w.Write([]byte("Internal server error" + err.Error()))
+		return
+	}
+	fmt.Println(res)
+	if len(res) == 0 && pInt == 1 {
+		// send html component with html/template
+		w.Write([]byte("<div style='text-align:center;font-size:20px;'>Be the first one to donate💕</div>"))
+		return
+	} else if len(res) == 0 && pInt > 1 {
+		return
+	}
+	count := 0
+	for _, v := range res {
+		if v.Status == "COMPLETE" {
+			count = 1
+			components.RecentSupportCard(components.RecentSupportCardData{
+				FullName: v.FullName,
+				Amount:   v.Amount,
+				Message:  v.Message.String,
+				Date:     v.CreatedAt.Time.Format("2006-01-02"),
+			}).Render(r.Context(), w)
+		}
+	}
+	if count == 0 && pInt == 1 {
+		w.Write([]byte("<div style='text-align:center;color:blue;font-size:20px;'>Be the first one to donate💕</div>"))
+	} else {
+		w.Write([]byte("<div hx-get='/api/v1/donation/list?p=" + strconv.Itoa(pInt+1) + "' hx-trigger='revealed' hx-swap='outerHTML'> </div>"))
+	}
 
 }

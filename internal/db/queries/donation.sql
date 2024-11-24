@@ -17,7 +17,7 @@ WHERE id = ?
 RETURNING *;
 
 -- name: ListDonations :many
-SELECT * FROM donations ORDER BY id ASC LIMIT ? OFFSET ?;
+SELECT * FROM donations ORDER BY updated_at DESC LIMIT ? OFFSET ?;
 
 -- name: CountDonations :one
 SELECT COUNT(*) FROM donations;

@@ -1,26 +1,24 @@
 package pages
 
 import (
-	"github.com/satishcg12/dotnet-me/view/components"
-	"github.com/satishcg12/dotnet-me/view/layouts"
+	"github.com/satishcg12/donate-me/view/components"
+	"github.com/satishcg12/donate-me/view/layouts"
 )
 
 templ Index() {
-	@layouts.DefaultTemplate("Home", "Home page of dotnet-me") {
-		<section class="h-[50vh] w-screen relative overflow-hidden">
+	@layouts.DefaultTemplate("Home", "Home page of donate-me") {
+		<section class="h-[33.33vh] w-screen relative overflow-hidden">
 			<img src="/static/images/thumbnail.jpg" alt="thumbnail" class="h-full w-full object-cover object-center brightness-90"/>
 		</section>
 		<section class="-translate-y-20 max-w-5xl mx-auto flex flex-col sm:flex-row-reverse items-center  sm:items-start justify-evenly sm:justify-normal gap-5 px-5">
 			@components.Section("Buy me a coffee", "If you like my work, consider buying me a coffee") {
-				@components.Mainform("","","",1,"")
+				@components.Mainform(components.MainformData{Amount: 1})
 			}
-			
-				@components.Section("About me", "I am a software developer who loves to build things") {
-					@components.AboutSectoin()
-					<hr>
-					@components.RecentSupports()
-				}
-			
+			@components.Section("About me", "I am a software developer who loves to build things") {
+				@components.AboutSectoin()
+				<hr/>
+				@components.RecentSupports()
+			}
 		</section>
 	}
 }

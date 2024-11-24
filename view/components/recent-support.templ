@@ -1,7 +1,12 @@
 package components
 
+
+
 templ RecentSupports() {
-    <section>
-    
-    </section>
+	<section>
+		<ol class="relative border-s border-gray-200 dark:border-gray-700" hx-get="/api/v1/donation/list?n=5" hx-trigger="load" hx-swap="innerHTML">
+			//
+		loading...
+		</ol>
+	</section>
 }

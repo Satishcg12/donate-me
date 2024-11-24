@@ -5,12 +5,20 @@ import (
 	"strconv"
 )
 
-templ Mainform(name string, email string, message string, amount uint32, err string) {
-	{{if err == "" {
-	err = "{name: '', email: '', message: '', amount: 0}"
+type MainformData struct {
+	Name    string
+	Email   string
+	Message string
+	Amount  uint32
+	Error   string
+}
+
+templ Mainform(formData MainformData) {
+	{{if formData.Error == "" {
+	formData.Error = "{name: '', email: '', message: '', amount: 0}"
 }
 	}}
-	{{ data := fmt.Sprintf(`{name: "%s", email: "%s", message: "%s", amount: %d, error: %s, total: %d}`, name, email, message, amount, err, amount*100) }}
+	{{ data := fmt.Sprintf(`{name: "%s", email: "%s", message: "%s", amount: %d, error: %s, total: %d}`, formData.Name, formData.Email, formData.Message, formData.Amount, formData.Error, formData.Amount*100) }}
 	<form
 		class="flex flex-col gap-5"
 		hx-post="/api/v1/donation/esewaform"
@@ -20,7 +28,7 @@ templ Mainform(name string, email string, message string, amount uint32, err str
 		// This is a form to buy me a coffee
 		<div class="flex justify-center  items-center text-gray-500 p-2 gap-5  bg-blue-100 border border-gray-300 shadow shadow-blue-100  rounded-2xl" x-data>
 			<div class="flex items-center gap-2">
-				<img src="/static/images/coffee.png" alt="coffee" class="h-16 w-16 rounded-full" title="Buy me a coffee to support my work worth 100 NRS"/> X
+				<img src="/static/images/coffee.png" alt="coffee" class="h-16  w-16 rounded-full" title="Buy me a coffee to support my work worth 100 NRS"/> X
 			</div>
 			<div>
 				<input
@@ -68,8 +76,8 @@ templ Mainform(name string, email string, message string, amount uint32, err str
 								 h-10 w-10 text-center"
 					x-mask="9999"
 					placeholder="10"
-					if amount != 1 && amount != 2 && amount != 3 {
-						value={ strconv.Itoa(int(amount)) }
+					if formData.Amount != 1 && formData.Amount != 2 && formData.Amount != 3 {
+						value={ strconv.Itoa(int(formData.Amount)) }
 					} else {
 						value="0"
 					}

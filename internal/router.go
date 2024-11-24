@@ -9,9 +9,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/satishcg12/dotnet-me/internal/handler"
-	"github.com/satishcg12/dotnet-me/internal/repository"
-	"github.com/satishcg12/dotnet-me/view/pages"
+	"github.com/satishcg12/donate-me/internal/handler"
+	"github.com/satishcg12/donate-me/internal/repository"
+	"github.com/satishcg12/donate-me/view/pages"
 )
 
 // {
@@ -34,6 +34,7 @@ func (a *App) LoadRoutes() {
 	FileServer(r, "/static", filesDir)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+
 		pages.Index().Render(r.Context(), w)
 	})
 	r.Get("/success/{donation_id}", func(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +74,9 @@ func (a *App) loadDonationRoutes(r chi.Router) {
 	donationHandler := handler.NewDonationHandler(donationRepo)
 	r.Post("/esewaform", donationHandler.EsewaForm)
 	r.Get("/success/{donation_id}", donationHandler.DonationSuccess)
-	r.Get("/fail/{donation_id}", donationHandler.DonationFail)
+	r.Get("/failure/{donation_id}", donationHandler.DonationFail)
+	r.Get("/list", donationHandler.ListDonations)
+
 	// r.Get("/", donationHandler.Get)
 	// r.Delete("/", donationHandler.Delete)
 }

@@ -6,12 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
-// set the font family
-@font-face {
-  font-family: "Choco Cooky";
-  src: url("../fonts/Choco_Cooky.ttf");
-}
-
-* {
-  font-family: "Short Stack", cursive;
+@layer base {
+  @font-face {
+    font-family: "Choco cooky";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Choco cooky"), url("../fonts/chococooky.ttf") format("truetype");
+  }
 }

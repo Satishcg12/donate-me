@@ -87,7 +87,7 @@ func (q *Queries) GetDonationByID(ctx context.Context, id int64) (Donation, erro
 }
 
 const listDonations = `-- name: ListDonations :many
-SELECT id, full_name, email, message, status, amount, created_at, updated_at FROM donations ORDER BY id ASC LIMIT ? OFFSET ?
+SELECT id, full_name, email, message, status, amount, created_at, updated_at FROM donations ORDER BY updated_at DESC LIMIT ? OFFSET ?
 `
 
 type ListDonationsParams struct {

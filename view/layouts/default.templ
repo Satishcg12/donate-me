@@ -9,15 +9,23 @@ templ DefaultTemplate(title string, description string) {
 			// <link rel="preconnect" href="https://fonts.googleapis.com"/>
 			// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 			// <link href="https://fonts.googleapis.com/css2?family=Short+Stack&display=swap" rel="stylesheet"/>
-			<link rel="stylesheet" href="/static/css/tailwind.css"/>
 			<link rel="stylesheet" href="/static/css/style.css"/>
+			<link rel="stylesheet" href="/static/css/tailwind.css"/>
+			<link rel="shortcut icon" href="/static/icons/favicon.ico" type="image/x-icon">
 			<title>{ title }</title>
 			<meta name="description" content="{description}"/>
 		</head>
-		<body class="min-h-screen bg-blue-50 ">
+		<body class="min-h-screen bg-blue-50 font-chococooky text-lg" data-mode=""> 
+			<script>
+				const darkMode = localStorage.getItem('dark-mode');
+				if (darkMode === 'dark') {
+					document.body.setAttribute('data-mode', 'dark');
+				}
+			</script>
 			{ children... }
 		</body>
 		<script defer src="/static/js/htmx.min.js"></script>
+		<script defer src="/static/js/sse.js"></script>
 		// <script defer src="/static/js/alpine.min.js"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.14.3/dist/cdn.min.js"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>

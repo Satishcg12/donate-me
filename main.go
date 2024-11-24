@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/satishcg12/dotnet-me/internal"
+	"github.com/satishcg12/donate-me/internal"
 )
 
 func main() {
