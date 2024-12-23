@@ -1,0 +1,35 @@
+package components
+
+type ListItemData struct {
+	Name    string
+	Email   string
+	Message string
+	Amount    string
+	Status  string
+}
+
+templ ListItem(data ListItemData) {
+	<tr>
+		<td>
+			<div class="flex flex-col gap-3">
+				<div>
+					<div class="font-bold">{ data.Name } </div>
+				</div>
+				<p class="text-xs text-gray-500">
+                    { data.Email }
+                </p>
+			</div>
+		</td>
+		<td class=" text-wrap line-clamp-2">
+            { data.Message }
+        </td>
+		<td>
+            { data.Amount }
+        </td>
+		<td>
+			<span class="badge badge-success">
+                { data.Status }
+            </span>
+		</td>
+	</tr>
+}

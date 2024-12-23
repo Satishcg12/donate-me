@@ -31,3 +31,6 @@ SET full_name = ?, email = ?, message = ?, status = ?, amount = ?
 WHERE id = ?
 RETURNING *;
 
+
+-- name: GetTotalDonationsAmount :one
+SELECT SUM(amount) FROM donations WHERE status = 'COMPLETE';

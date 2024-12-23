@@ -28,6 +28,10 @@ type DonationHanderInterface interface {
 	DonationFail(w http.ResponseWriter, r *http.Request)
 
 	ListDonations(w http.ResponseWriter, r *http.Request)
+
+	TotalDonations(w http.ResponseWriter, r *http.Request)
+	TotalDonationsAmount(w http.ResponseWriter, r *http.Request)
+	RecentDonations(w http.ResponseWriter, r *http.Request)
 }
 type FormError struct {
 	Amount  string `json:"amount"`
@@ -261,6 +265,7 @@ func (d *DonationHandler) ListDonations(w http.ResponseWriter, r *http.Request) 
 
 	res, err := d.repo.ListDonations(r.Context(), repository.ListDonationsParams{Limit: int64(nInt), Offset: int64((pInt - 1) * nInt)})
 	if err != nil {
+		fmt.Println("running " + err.Error())
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		w.Write([]byte("Internal server error" + err.Error()))
 		return
@@ -291,4 +296,40 @@ func (d *DonationHandler) ListDonations(w http.ResponseWriter, r *http.Request) 
 		w.Write([]byte("<div hx-get='/api/v1/donation/list?p=" + strconv.Itoa(pInt+1) + "' hx-trigger='revealed' hx-swap='outerHTML'> </div>"))
 	}
 
+}
+
+func (d *DonationHandler) TotalDonations(w http.ResponseWriter, r *http.Request) {
+	res, err := d.repo.CountDonations(r.Context())
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte(strconv.Itoa(int(res))))
+}
+
+func (d *DonationHandler) TotalDonationsAmount(w http.ResponseWriter, r *http.Request) {
+	res, err := d.repo.GetTotalDonationsAmount(r.Context())
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte(strconv.Itoa(int(res.Float64))))
+}
+
+func (d *DonationHandler) RecentDonations(w http.ResponseWriter, r *http.Request) {
+	res, err := d.repo.ListDonations(r.Context(), repository.ListDonationsParams{Limit: 100})
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	for _, v := range res {
+		amt := strconv.Itoa(int(v.Amount))
+		components.ListItem(components.ListItemData{
+			Name:    v.FullName,
+			Amount:  amt,
+			Email:   v.Email,
+			Message: v.Message.String,
+			Status:  v.Status,
+		}).Render(r.Context(), w)
+	}
 }

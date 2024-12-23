@@ -64,7 +64,12 @@ func (a *App) LoadRoutes() {
 		}).Render(r.Context(), w)
 	})
 
+	r.Get("/admin/dashboard", func(w http.ResponseWriter, r *http.Request) {
+		pages.AdminDashboard().Render(r.Context(), w)
+	})
+
 	r.Route("/api/v1/donation", a.loadDonationRoutes)
+	r.Route("/api/v1/admin", a.loadAdminRoutes)
 
 	a.router = r
 }
@@ -76,9 +81,19 @@ func (a *App) loadDonationRoutes(r chi.Router) {
 	r.Get("/success/{donation_id}", donationHandler.DonationSuccess)
 	r.Get("/failure/{donation_id}", donationHandler.DonationFail)
 	r.Get("/list", donationHandler.ListDonations)
+	r.Get("/total", donationHandler.TotalDonations)
+	r.Get("/totalamount", donationHandler.TotalDonationsAmount)
+	r.Get("/recent", donationHandler.RecentDonations)
 
 	// r.Get("/", donationHandler.Get)
 	// r.Delete("/", donationHandler.Delete)
+}
+
+func (a *App) loadAdminRoutes(r chi.Router) {
+
+	// adminHandler := handler.NewAdminHandler()
+	// r.Get("/dashboard", adminHandler.GetAdminDashboard)
+
 }
 
 func FileServer(r chi.Router, path string, root http.FileSystem) {

@@ -86,6 +86,17 @@ func (q *Queries) GetDonationByID(ctx context.Context, id int64) (Donation, erro
 	return i, err
 }
 
+const getTotalDonationsAmount = `-- name: GetTotalDonationsAmount :one
+SELECT SUM(amount) FROM donations WHERE status = 'COMPLETE'
+`
+
+func (q *Queries) GetTotalDonationsAmount(ctx context.Context) (sql.NullFloat64, error) {
+	row := q.db.QueryRowContext(ctx, getTotalDonationsAmount)
+	var sum sql.NullFloat64
+	err := row.Scan(&sum)
+	return sum, err
+}
+
 const listDonations = `-- name: ListDonations :many
 SELECT id, full_name, email, message, status, amount, created_at, updated_at FROM donations ORDER BY updated_at DESC LIMIT ? OFFSET ?
 `

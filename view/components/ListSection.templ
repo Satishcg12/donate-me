@@ -1,0 +1,51 @@
+package components
+
+type ListSectionData struct {
+	Items []ListItemData
+}
+
+templ ListSection(data ListSectionData) {
+	<div class="card bg-base-100 shadow-xl col-span-full">
+		<div class="card-body">
+			<h2 class="card-title">Recent Donations</h2>
+			<div class="overflow-x-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Message</th>
+							<th>Amount</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody hx-get="/api/v1/donation/recent" hx-trigger="load" hx-swap="innerHTML">
+						if len(data.Items) == 0 {
+							<tr>
+								<td colspan="4" class="text-center">No donations found</td>
+							</tr>
+						} else {
+							for _, item := range data.Items {
+								@ListItem(item)
+							}
+						}
+						// <tr>
+						// 	<td>
+						// 		<div class="flex flex-col gap-3">
+						// 			<div>
+						// 				<div class="font-bold">John Doe</div>
+						// 			</div>
+						// 			<p class="text-xs text-gray-500">example@gmail.com</p>
+						// 		</div>
+						// 	</td>
+						// 	<td class=" text-wrap line-clamp-2">Donated for Donated for the causeDonated for the causeDonated for the causeDonated for the causeDonated for the causeDonated for the causeDonated for the causethe causeDonated for the causeDonated for the causeDonated for the cause</td>
+						// 	<td>Jan 15, 2024</td>
+						// 	<td>
+						// 		<span class="badge badge-success">Completed</span>
+						// 	</td>
+						// </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+}

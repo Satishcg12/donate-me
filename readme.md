@@ -35,8 +35,7 @@ A simple donation website where users can donate money to the organization. The 
 - To migrate the database, run the following command
 ```bash
 # Migrate the database
-goose -dir ./internal/db/migrations sqlite3 ./donation.db create add_donation_t
-able  sql
+goose -dir ./internal/db/migrations sqlite3 ./donation.db create add_donation_table  sql
 
 # Run the migration
 goose -dir ./internal/db/migrations sqlite3 ./donation.db up
